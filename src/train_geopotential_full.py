@@ -8,14 +8,14 @@ import tensorflow.keras as keras
 from tensorflow.keras.layers import Input, Dropout, Conv2D, Lambda
 import tensorflow.keras.backend as K
 
-from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn
+from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn, create_predictions
 
 DATADIR = '/home/visgean/Downloads/weather/'
 
 
 def train(datadir, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
-          test_years, lead_time, gpu, iterative):
+          test_years, lead_time, gpu, iterative, RAM_DOWNLOADED_FULLY=True):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     # Limit TF memory usage
     limit_mem()
@@ -29,41 +29,47 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
     ds_valid = ds.sel(time=slice(*valid_years))
     ds_test = ds.sel(time=slice(*test_years))
 
-    levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
+    geo_levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
 
-    levels = {'z': levels}
+    levels_per_variable = {'z': geo_levels}
 
+    print("Loading training data")
     dg_train = DataGenerator(
         ds_train,
-        levels,
+        levels_per_variable,
         lead_time,
-        batch_size=batch_size
+        batch_size=batch_size,
+        load=RAM_DOWNLOADED_FULLY
     )
 
+    print("Loading validation data")
     dg_valid = DataGenerator(
         ds_valid,
-        levels,
+        levels_per_variable,
         lead_time,
         batch_size=batch_size,
         mean=dg_train.mean,
         std=dg_train.std,
-        shuffle=False
+        shuffle=False,
+        load=RAM_DOWNLOADED_FULLY
     )
+    print("Loading test data")
     dg_test = DataGenerator(
         ds_test,
-        levels,
+        levels_per_variable,
         lead_time,
         batch_size=batch_size,
         mean=dg_train.mean,
         std=dg_train.std,
-        shuffle=False
+        shuffle=False,
+        load=RAM_DOWNLOADED_FULLY
     )
 
     print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')
 
     # Build model
     # TODO: Flexible input shapes and optimizer
-    model = build_cnn(filters, kernels, input_shape=(32, 64, len(levels)), activation=activation, dr=dr)
+    model = build_cnn(filters, kernels, input_shape=(32, 64, len(geo_levels)), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')
     print(model.summary())
 
@@ -93,10 +99,11 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
     else:
         print(compute_weighted_rmse(pred, ds_valid_array).load())
 
+
 train(
     datadir=DATADIR,
     filters=[64, 64, 64, 64, 2],
-    kernels= [5, 5, 5, 5, 5],
+    kernels=[5, 5, 5, 5, 5],
     lr=1e-4,
     activation='elu',
     dr=0,
@@ -109,25 +116,6 @@ train(
     test_years=('2017', '2018'),
     lead_time=72,
     gpu=0,
-    iterative=False
+    iterative=False,
+    RAM_DOWNLOADED_FULLY=False,
 )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
