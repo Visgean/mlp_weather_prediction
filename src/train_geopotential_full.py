@@ -10,7 +10,7 @@ import tensorflow.keras.backend as K
 
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn, create_predictions
 
-DATADIR = '/home/visgean/Downloads/weather/'
+DATADIR = '/home/ipab/weatherbench/'
 
 
 def train(datadir, filters, kernels, lr, activation, dr, batch_size,
@@ -117,5 +117,5 @@ train(
     lead_time=72,
     gpu=0,
     iterative=False,
-    RAM_DOWNLOADED_FULLY=False,
+    RAM_DOWNLOADED_FULLY=True,
 )
