@@ -102,7 +102,7 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
 
 train(
     datadir=DATADIR,
-    filters=[64, 64, 64, 64, 2],
+    filters=[64, 64, 64, 64, 1],
     kernels=[5, 5, 5, 5, 5],
     lr=1e-4,
     activation='elu',

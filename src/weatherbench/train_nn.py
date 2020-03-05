@@ -107,6 +107,7 @@ def build_cnn(filters, kernels, input_shape, activation='elu', dr=0):
     for f, k in zip(filters[:-1], kernels[:-1]):
         x = PeriodicConv2D(f, k, activation=activation)(x)
         if dr > 0: x = Dropout(dr)(x)
+
     output = PeriodicConv2D(filters[-1], kernels[-1])(x)
     return keras.models.Model(input, output)
 
