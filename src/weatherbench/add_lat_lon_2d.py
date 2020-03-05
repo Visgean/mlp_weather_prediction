@@ -6,9 +6,7 @@ from glob import glob
 import os
 import shutil
 
-def add_2d(
-        ds,
-):
+def add_2d(ds):
     """
     Regrid horizontally.
     :param ds: Input xarray dataset

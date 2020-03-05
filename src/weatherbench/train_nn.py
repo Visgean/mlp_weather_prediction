@@ -48,9 +48,6 @@ class DataGenerator(keras.utils.Sequence):
         self.data = xr.concat(data, 'level').transpose('time', 'lat', 'lon', 'level')
         self.mean = self.data.mean(('time', 'lat', 'lon')).compute() if mean is None else mean
 
-        import pdb
-        pdb.set_trace()
-
         self.std = self.data.std('time').mean(('lat', 'lon')).compute() if std is None else std
         # Normalize
         self.data = (self.data - self.mean) / self.std

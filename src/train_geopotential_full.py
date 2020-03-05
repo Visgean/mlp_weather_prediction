@@ -1,0 +1,133 @@
+from tensorflow.keras.layers import *
+from weatherbench.score import *
+import os
+import numpy as np
+import xarray as xr
+import tensorflow as tf
+import tensorflow.keras as keras
+from tensorflow.keras.layers import Input, Dropout, Conv2D, Lambda
+import tensorflow.keras.backend as K
+
+from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn
+
+DATADIR = '/home/visgean/Downloads/weather/'
+
+
+def train(datadir, filters, kernels, lr, activation, dr, batch_size,
+          patience, model_save_fn, pred_save_fn, train_years, valid_years,
+          test_years, lead_time, gpu, iterative):
+    os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
+    # Limit TF memory usage
+    limit_mem()
+
+    # Open dataset and create data generators
+    # TODO: Flexible input data
+    ds = xr.open_mfdataset(f'{datadir}geopotential/*.nc', combine='by_coords')
+
+    # TODO: Flexible valid split
+    ds_train = ds.sel(time=slice(*train_years))
+    ds_valid = ds.sel(time=slice(*valid_years))
+    ds_test = ds.sel(time=slice(*test_years))
+
+    levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
+
+    levels = {'z': levels}
+
+    dg_train = DataGenerator(
+        ds_train,
+        levels,
+        lead_time,
+        batch_size=batch_size
+    )
+
+    dg_valid = DataGenerator(
+        ds_valid,
+        levels,
+        lead_time,
+        batch_size=batch_size,
+        mean=dg_train.mean,
+        std=dg_train.std,
+        shuffle=False
+    )
+    dg_test = DataGenerator(
+        ds_test,
+        levels,
+        lead_time,
+        batch_size=batch_size,
+        mean=dg_train.mean,
+        std=dg_train.std,
+        shuffle=False
+    )
+
+    print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')
+
+    # Build model
+    # TODO: Flexible input shapes and optimizer
+    model = build_cnn(filters, kernels, input_shape=(32, 64, len(levels)), activation=activation, dr=dr)
+    model.compile(keras.optimizers.Adam(lr), 'mse')
+    print(model.summary())
+
+    # Train model
+    # TODO: Learning rate schedule
+    model.fit_generator(dg_train, epochs=100, validation_data=dg_valid,
+                        callbacks=[tf.keras.callbacks.EarlyStopping(
+                            monitor='val_loss',
+                            min_delta=0,
+                            patience=patience,
+                            verbose=1,
+                            mode='auto'
+                        )]
+                        )
+    print(f'Saving model weights: {model_save_fn}')
+    model.save_weights(model_save_fn)
+
+    # Create predictions
+    pred = create_iterative_predictions(model, dg_test) if iterative else create_predictions(model, dg_test)
+    print(f'Saving predictions: {pred_save_fn}')
+    pred.to_netcdf(pred_save_fn)
+
+    ds_valid_array = ds_valid.to_array()
+
+    if iterative:
+        print(evaluate_iterative_forecast(pred, ds_valid).load())
+    else:
+        print(compute_weighted_rmse(pred, ds_valid_array).load())
+
+train(
+    datadir=DATADIR,
+    filters=[64, 64, 64, 64, 2],
+    kernels= [5, 5, 5, 5, 5],
+    lr=1e-4,
+    activation='elu',
+    dr=0,
+    batch_size=128,
+    patience=3,
+    model_save_fn='./models/',
+    pred_save_fn='./predictions/',
+    train_years=('1979', '2015'),
+    valid_years=('2016', '2016'),
+    test_years=('2017', '2018'),
+    lead_time=72,
+    gpu=0,
+    iterative=False
+)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
