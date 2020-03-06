@@ -24,7 +24,12 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
 
     # Open dataset and create data generators
     # TODO: Flexible input data
-    ds = xr.open_mfdataset(f'{datadir}geopotential/*.nc', combine='by_coords', parallel=True, chunks={'time': 10})
+    ds = xr.open_mfdataset(
+        f'{datadir}geopotential/*.nc',
+        combine='by_coords',
+        parallel=True,
+        chunks={'time': 10}
+    )
 
     # TODO: Flexible valid split
     ds_train = ds.sel(time=slice(*train_years))
@@ -105,7 +110,7 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
 if __name__ == '__main__':
     train(
         datadir=DATADIR,
-        filters=[64, 64, 64, 64, 1],
+        filters=[64, 64, 64, 64, 11],
         kernels=[5, 5, 5, 5, 5],
         lr=1e-4,
         activation='elu',
