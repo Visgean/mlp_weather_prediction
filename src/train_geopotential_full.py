@@ -11,6 +11,9 @@ import tensorflow.keras.backend as K
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn, create_predictions
 
 
+assert tf.test.is_gpu_available()
+
+
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
