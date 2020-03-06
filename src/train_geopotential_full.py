@@ -10,7 +10,9 @@ import tensorflow.keras.backend as K
 
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, limit_mem, build_cnn, create_predictions
 
-DATADIR = '/home/ipab/weatherbench/'
+
+
+DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
 
 def train(datadir, filters, kernels, lr, activation, dr, batch_size,
@@ -18,11 +20,11 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
           test_years, lead_time, gpu, iterative, RAM_DOWNLOADED_FULLY=True):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     # Limit TF memory usage
-    limit_mem()
+    # limit_mem()
 
     # Open dataset and create data generators
     # TODO: Flexible input data
-    ds = xr.open_mfdataset(f'{datadir}geopotential/*.nc', combine='by_coords')
+    ds = xr.open_mfdataset(f'{datadir}geopotential/*.nc', combine='by_coords', parallel=True, chunks={'time': 10})
 
     # TODO: Flexible valid split
     ds_train = ds.sel(time=slice(*train_years))
@@ -100,22 +102,23 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
         print(compute_weighted_rmse(pred, ds_valid_array).load())
 
 
-train(
-    datadir=DATADIR,
-    filters=[64, 64, 64, 64, 1],
-    kernels=[5, 5, 5, 5, 5],
-    lr=1e-4,
-    activation='elu',
-    dr=0,
-    batch_size=128,
-    patience=3,
-    model_save_fn='./models/',
-    pred_save_fn='./predictions/',
-    train_years=('1979', '2015'),
-    valid_years=('2016', '2016'),
-    test_years=('2017', '2018'),
-    lead_time=72,
-    gpu=0,
-    iterative=False,
-    RAM_DOWNLOADED_FULLY=True,
-)
+if __name__ == '__main__':
+    train(
+        datadir=DATADIR,
+        filters=[64, 64, 64, 64, 1],
+        kernels=[5, 5, 5, 5, 5],
+        lr=1e-4,
+        activation='elu',
+        dr=0,
+        batch_size=128,
+        patience=3,
+        model_save_fn='./models/',
+        pred_save_fn='./predictions/',
+        train_years=('1979', '2015'),
+        valid_years=('2016', '2016'),
+        test_years=('2017', '2018'),
+        lead_time=72,
+        gpu=0,
+        iterative=False,
+        RAM_DOWNLOADED_FULLY=False,
+    )
