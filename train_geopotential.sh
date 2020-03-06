@@ -33,9 +33,8 @@ export DATASET_DIR=${TMP}/datasets/
 
 
 mkdir -p ${DATASET_DIR}/geopotential/
-cd  ${DATASET_DIR}/geopotential/
-wget "https://dataserv.ub.tum.de/s/m1524895/download?path=%2F5.625deg%2Fgeopotential_500&files=geopotential_500_5.625deg.zip" geo.zip
-unzip geo.zip
+
+cp -n /home/${STUDENT_ID}/geopotential/*.nc ${DATASET_DIR}/geopotential/
 
 
 # Activate the relevant virtual environment:
