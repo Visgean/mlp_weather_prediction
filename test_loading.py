@@ -12,7 +12,7 @@ from collections import OrderedDict
 
 from src.train_nn import DataGenerator
 
-DATADIR = '/home/visgean/Downloads/weather/'
+DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
 z500_valid = load_test_data(f'{DATADIR}geopotential_500', 'z')
 t850_valid = load_test_data(f'{DATADIR}temperature_850', 't')
