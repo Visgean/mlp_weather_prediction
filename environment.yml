@@ -12,6 +12,7 @@ dependencies:
   - matplotlib
   - seaborn
   - configargparse
-  - tensorflow
+  - tensorflow-gpu=1.13
+
   - pip:
       - cdsapi
