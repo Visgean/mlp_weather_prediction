@@ -4,6 +4,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 import xarray as xr
 
+from data_gen import SelectiveDataGenerator
 from weatherbench.score import *
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, build_cnn, create_predictions
 
@@ -34,7 +35,7 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
     levels_per_variable = {'z': geo_levels}
 
     print("Loading training data")
-    dg_train = DataGenerator(
+    dg_train = SelectiveDataGenerator(
         ds_train,
         levels_per_variable,
         lead_time,
@@ -53,18 +54,7 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
         mean=means,
         std=stds,
         shuffle=False,
-        load=RAM_DOWNLOADED_FULLY
-    )
-    print("Loading test data")
-    dg_test = DataGenerator(
-        ds_test,
-        levels_per_variable,
-        lead_time,
-        batch_size=batch_size,
-        mean=means,
-        std=stds,
-        shuffle=False,
-        load=RAM_DOWNLOADED_FULLY
+        load=True
     )
 
     print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')
@@ -90,6 +80,19 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
     model.save_weights(model_save_fn)
 
     # Create predictions
+
+    print("Loading test data")
+    dg_test = DataGenerator(
+        ds_test,
+        levels_per_variable,
+        lead_time,
+        batch_size=batch_size,
+        mean=means,
+        std=stds,
+        shuffle=False,
+        load=True
+    )
+
     pred = create_iterative_predictions(model, dg_test) if iterative else create_predictions(model, dg_test)
     print(f'Saving predictions: {pred_save_fn}')
     pred.to_netcdf(pred_save_fn)

@@ -46,11 +46,14 @@ class DataGenerator(keras.utils.Sequence):
                 data.append(ds[var].expand_dims({'level': generic_level}, 1))
 
         self.data = xr.concat(data, 'level').transpose('time', 'lat', 'lon', 'level')
-        self.mean = self.data.mean(('time', 'lat', 'lon')).compute() if mean is None else mean
 
+
+        self.mean = self.data.mean(('time', 'lat', 'lon')).compute() if mean is None else mean
         self.std = self.data.std('time').mean(('lat', 'lon')).compute() if std is None else std
+
         # Normalize
         self.data = (self.data - self.mean) / self.std
+
         self.n_samples = self.data.isel(time=slice(0, -lead_time)).shape[0]
         self.init_time = self.data.isel(time=slice(None, -lead_time)).time
         self.valid_time = self.data.isel(time=slice(lead_time, None)).time
@@ -58,7 +61,10 @@ class DataGenerator(keras.utils.Sequence):
         self.on_epoch_end()
 
         # For some weird reason calling .load() earlier messes up the mean and std computations
-        if load: print('Loading data into RAM'); self.data.load()
+        if load:
+            print('Loading data into RAM')
+            self.data.load()
+            self.data.compute()
 
     def __len__(self):
         'Denotes the number of batches per epoch'
