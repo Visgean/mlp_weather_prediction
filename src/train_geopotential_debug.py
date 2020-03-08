@@ -1,23 +1,13 @@
 import os
 import train
-import xarray as xr
 
 
-# import tensorflow as tf
-# assert tf.test.is_gpu_available()
 
-
-means = xr.load_dataarray('mean_full.nc')
-stds = xr.load_dataarray('std_full.nc')
-
-
-DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
+DATADIR = '/home/visgean/Downloads/weather-small/'
 
 if __name__ == '__main__':
     train.train(
         datadir=DATADIR,
-        means=means,
-        stds=stds,
         filters=[64, 64, 64, 64, 11],
         kernels=[5, 5, 5, 5, 5],
         lr=1e-4,
@@ -33,5 +23,5 @@ if __name__ == '__main__':
         lead_time=72,
         gpu=0,
         iterative=False,
-        RAM_DOWNLOADED_FULLY=False,
+        RAM_DOWNLOADED_FULLY=True,
     )
