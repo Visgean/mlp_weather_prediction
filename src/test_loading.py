@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
@@ -7,10 +8,10 @@ from tensorflow.keras.layers import *
 import tensorflow.keras.backend as K
 import seaborn as sns
 import pickle
-from src.score import *
+from weatherbench.score import *
 from collections import OrderedDict
 
-from src.train_nn import DataGenerator
+from weatherbench.train_nn import DataGenerator
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
