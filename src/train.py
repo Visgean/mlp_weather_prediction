@@ -2,37 +2,24 @@ import os
 
 import tensorflow as tf
 import tensorflow.keras as keras
-import xarray as xr
 
 from data_gen import SelectiveDataGenerator
 from weatherbench.score import *
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, build_cnn, create_predictions
 
 
-def train(datadir, filters, kernels, lr, activation, dr, batch_size,
+def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
-          test_years, lead_time, gpu, iterative, means, stds,  RAM_DOWNLOADED_FULLY=True):
+          test_years, lead_time, gpu, iterative, means, stds,
+          levels_per_variable, RAM_DOWNLOADED_FULLY=True):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     # Limit TF memory usage
     # limit_mem()
-
-    # Open dataset and create data generators
-    # TODO: Flexible input data
-    ds = xr.open_mfdataset(
-        f'{datadir}geopotential/*.nc',
-        combine='by_coords',
-        parallel=True,
-        chunks={'time': 10}
-    )
 
     # TODO: Flexible valid split
     ds_train = ds.sel(time=slice(*train_years))
     ds_valid = ds.sel(time=slice(*valid_years))
     ds_test = ds.sel(time=slice(*test_years))
-
-    geo_levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
-
-    levels_per_variable = {'z': geo_levels}
 
     print("Loading training data")
     dg_train = SelectiveDataGenerator(
@@ -61,7 +48,9 @@ def train(datadir, filters, kernels, lr, activation, dr, batch_size,
 
     # Build model
     # TODO: Flexible input shapes and optimizer
-    model = build_cnn(filters, kernels, input_shape=(32, 64, len(geo_levels)), activation=activation, dr=dr)
+    # Get the number of levels from the first variable (should be only one)
+    num_levels = len(list(levels_per_variable.values())[0])
+    model = build_cnn(filters, kernels, input_shape=(32, 64, num_levels), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')
     print(model.summary())
 

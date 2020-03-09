@@ -7,17 +7,29 @@ import xarray as xr
 # assert tf.test.is_gpu_available()
 
 
-means = xr.load_dataarray('mean_full.nc')
-stds = xr.load_dataarray('std_full.nc')
+means = xr.load_dataarray('data/geopotential_mean_full.nc')
+stds = xr.load_dataarray('data/geopotential_std_full.nc')
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
+# TODO: Flexible input data
+ds = xr.open_mfdataset(
+    f'{DATADIR}geopotential/*.nc',
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+)
+
+geo_levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
+levels_per_variable = {'z': geo_levels}
+
 if __name__ == '__main__':
     train.train(
-        datadir=DATADIR,
+        ds=ds,
         means=means,
         stds=stds,
+        levels_per_variable=levels_per_variable,
         filters=[64, 64, 64, 64, 11],
         kernels=[5, 5, 5, 5, 5],
         lr=1e-4,

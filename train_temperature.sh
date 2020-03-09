@@ -33,9 +33,9 @@ mkdir -p ${TMP}/datasets/
 export DATASET_DIR=${TMP}/datasets/
 
 
-mkdir -p ${DATASET_DIR}/geopotential/
+mkdir -p ${DATASET_DIR}/temperature/
 
-cp -n /home/${STUDENT_ID}/geopotential/*.nc ${DATASET_DIR}/geopotential/
+cp -n /home/${STUDENT_ID}/temperature/*.nc ${DATASET_DIR}/temperature/
 
 
 # Activate the relevant virtual environment:
@@ -43,4 +43,4 @@ cp -n /home/${STUDENT_ID}/geopotential/*.nc ${DATASET_DIR}/geopotential/
 source /home/${STUDENT_ID}/miniconda3/bin/activate weatherbench
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
-python train_geopotential_full.py
+python train_temperature_full.py
