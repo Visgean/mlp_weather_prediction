@@ -21,11 +21,15 @@ ds = xr.open_mfdataset(
     chunks={'time': 10}
 )
 
+geo_levels = [1, 10, 100, 200, 300, 400, 500, 600, 700, 850, 1000]
+levels_per_variable = {'z': geo_levels}
+
 if __name__ == '__main__':
     train.train(
         ds=ds,
         means=means,
         stds=stds,
+        levels_per_variable=levels_per_variable,
         filters=[64, 64, 64, 64, 11],
         kernels=[5, 5, 5, 5, 5],
         lr=1e-4,
