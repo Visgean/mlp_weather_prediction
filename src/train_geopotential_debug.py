@@ -5,8 +5,8 @@ import xarray as xr
 
 DATADIR = '/home/visgean/Downloads/weather-small/'
 
-means = xr.load_dataarray('geopotential_mean_full.nc')
-stds = xr.load_dataarray('geopotential_std_full.nc')
+means = xr.load_dataarray('data/geopotential_mean_full.nc')
+stds = xr.load_dataarray('data/geopotential_std_full.nc')
 
 ds = xr.open_mfdataset(
     f'{DATADIR}geopotential/*.nc',

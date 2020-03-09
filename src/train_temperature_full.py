@@ -7,8 +7,8 @@ import xarray as xr
 # assert tf.test.is_gpu_available()
 
 # TODO: create means
-means = xr.load_dataarray('temperature_mean_full.nc')
-stds = xr.load_dataarray('temperature_std_full.nc')
+means = xr.load_dataarray('data/temperature_mean_full.nc')
+stds = xr.load_dataarray('data/temperature_std_full.nc')
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
