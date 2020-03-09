@@ -38,6 +38,11 @@ mkdir -p ${DATASET_DIR}/temperature/
 cp -n /home/${STUDENT_ID}/temperature/*.nc ${DATASET_DIR}/temperature/
 
 
+export SAVE_DIR=/home/${STUDENT_ID}/output/
+mkdir -p ${SAVE_DIR}
+
+
+
 # Activate the relevant virtual environment:
 
 source /home/${STUDENT_ID}/miniconda3/bin/activate weatherbench

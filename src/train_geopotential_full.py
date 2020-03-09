@@ -12,6 +12,9 @@ stds = xr.load_dataarray('data/geopotential_std_full.nc')
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
+OUT_DIR = os.getenv('SAVE_DIR')
+
+
 
 # TODO: Flexible input data
 ds = xr.open_mfdataset(
@@ -37,8 +40,8 @@ if __name__ == '__main__':
         dr=0,
         batch_size=128,
         patience=50,
-        model_save_fn='./models/',
-        pred_save_fn='./predictions/',
+        model_save_fn=OUT_DIR,
+        pred_save_fn=os.path.join(OUT_DIR, 'predictions'),
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
