@@ -24,7 +24,7 @@ if __name__ == '__main__':
         activation='elu',
         dr=0,
         batch_size=128,
-        patience=3,
+        patience=50,
         model_save_fn='./models/',
         pred_save_fn='./predictions/',
         train_years=('1979', '2015'),
