@@ -40,7 +40,7 @@ cp -n /home/${STUDENT_ID}/geopotential/*.nc ${DATASET_DIR}/geopotential/
 
 # Activate the relevant virtual environment:
 
-source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
+source /home/${STUDENT_ID}/miniconda3/bin/activate weatherbench
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
 python train_geopotential_full.py
