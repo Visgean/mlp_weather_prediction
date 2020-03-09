@@ -2,28 +2,18 @@ import os
 
 import tensorflow as tf
 import tensorflow.keras as keras
-import xarray as xr
 
 from data_gen import SelectiveDataGenerator
 from weatherbench.score import *
 from weatherbench.train_nn import DataGenerator, create_iterative_predictions, build_cnn, create_predictions
 
 
-def train(datadir, filters, kernels, lr, activation, dr, batch_size,
+def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,  RAM_DOWNLOADED_FULLY=True):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     # Limit TF memory usage
     # limit_mem()
-
-    # Open dataset and create data generators
-    # TODO: Flexible input data
-    ds = xr.open_mfdataset(
-        f'{datadir}geopotential/*.nc',
-        combine='by_coords',
-        parallel=True,
-        chunks={'time': 10}
-    )
 
     # TODO: Flexible valid split
     ds_train = ds.sel(time=slice(*train_years))

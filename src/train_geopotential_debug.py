@@ -1,13 +1,21 @@
 import os
 import train
-
+import xarray as xr
 
 
 DATADIR = '/home/visgean/Downloads/weather-small/'
 
+ds = xr.open_mfdataset(
+    f'{DATADIR}geopotential/*.nc',
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+)
+
+
 if __name__ == '__main__':
     train.train(
-        datadir=DATADIR,
+        ds=ds,
         filters=[64, 64, 64, 64, 11],
         kernels=[5, 5, 5, 5, 5],
         lr=1e-4,

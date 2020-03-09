@@ -13,9 +13,17 @@ stds = xr.load_dataarray('std_full.nc')
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 
+# TODO: Flexible input data
+ds = xr.open_mfdataset(
+    f'{DATADIR}geopotential/*.nc',
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+)
+
 if __name__ == '__main__':
     train.train(
-        datadir=DATADIR,
+        ds=ds,
         means=means,
         stds=stds,
         filters=[64, 64, 64, 64, 11],
