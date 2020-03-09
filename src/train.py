@@ -56,14 +56,19 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
 
     # Train model
     # TODO: Learning rate schedule
-    model.fit_generator(dg_train, epochs=500, validation_data=dg_valid,
-                        callbacks=[tf.keras.callbacks.EarlyStopping(
-                            monitor='val_loss',
-                            min_delta=0,
-                            patience=patience,
-                            verbose=1,
-                            mode='auto'
-                        )]
+    model.fit_generator(dg_train, epochs=100, validation_data=dg_valid,
+                        callbacks=[
+                            tf.keras.callbacks.EarlyStopping(
+                                monitor='val_loss',
+                                min_delta=0,
+                                patience=patience,
+                                verbose=1,
+                                mode='auto'
+                            ),
+                            tf.keras.callbacks.ModelCheckpoint(
+                                './models/weights.{epoch:02d}-{val_loss:.2f}.hdf5'
+                            )
+                        ]
                         )
     print(f'Saving model weights: {model_save_fn}')
     model.save_weights(model_save_fn)
@@ -92,4 +97,3 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         print(evaluate_iterative_forecast(pred, ds_valid).load())
     else:
         print(compute_weighted_rmse(pred, ds_valid_array).load())
-
