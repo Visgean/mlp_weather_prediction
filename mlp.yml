@@ -164,5 +164,4 @@ dependencies:
     - pyqtwebengine==5.12.1
     - tqdm==4.43.0
     - urllib3==1.25.8
-prefix: /home/s1660124/miniconda3/envs/mlp
 
