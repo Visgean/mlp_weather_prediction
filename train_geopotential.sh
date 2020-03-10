@@ -39,7 +39,7 @@ cp -n /home/${STUDENT_ID}/geopotential/*.nc ${DATASET_DIR}/geopotential/
 
 
 
-export SAVE_DIR=/home/${STUDENT_ID}/output/
+export SAVE_DIR=/home/${STUDENT_ID}/output_geopotential/
 mkdir -p ${SAVE_DIR}
 
 

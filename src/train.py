@@ -66,7 +66,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
                                 mode='auto'
                             ),
                             tf.keras.callbacks.ModelCheckpoint(
-                                './models/weights.{epoch:02d}-{val_loss:.2f}.hdf5'
+                                os.path.join(model_save_fn, 'models', 'weights.{epoch:02d}-{val_loss:.2f}.hdf5')
                             )
                         ]
                         )
