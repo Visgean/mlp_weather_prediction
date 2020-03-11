@@ -6,10 +6,10 @@ import xarray as xr
 # import tensorflow as tf
 # assert tf.test.is_gpu_available()
 
-# means = xr.load_dataarray('data/temperature_mean_full.nc')
-# stds = xr.load_dataarray('data/temperature_std_full.nc')
-means = None
-stds = None
+means = xr.load_dataarray('data/baseline_mean.nc')
+stds = xr.load_dataarray('data/baseline_std.nc')
+# means = None
+# stds = None
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
@@ -18,15 +18,11 @@ OUT_DIR = os.getenv('SAVE_DIR')
 # Load the geo500 and temp850 data and merge
 z = xr.open_mfdataset(
     f'{DATADIR}geopotential_500/*.nc',
-    combine='by_coords',
-    parallel=True,
-    chunks={'time': 10},
+    combine='by_coords'
 )
 t = xr.open_mfdataset(
     f'{DATADIR}temperature_850/*.nc',
-    combine='by_coords',
-    parallel=True,
-    chunks={'time': 10},
+    combine='by_coords'
 )
 ds = xr.merge([z, t], compat='override')
 
