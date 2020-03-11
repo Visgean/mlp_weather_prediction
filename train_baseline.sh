@@ -47,7 +47,7 @@ mkdir -p ${SAVE_DIR}
 
 # Activate the relevant virtual environment:
 
-source /home/${STUDENT_ID}/miniconda3/bin/activate weatherbench
+source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
 python train_baseline.py
