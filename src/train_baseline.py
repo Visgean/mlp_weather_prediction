@@ -28,7 +28,7 @@ t = xr.open_mfdataset(
     parallel=True,
     chunks={'time': 10},
 )
-ds = xr.merge([z, t])
+ds = xr.merge([z, t], compat='override')
 
 levels_per_variable = {'z': None, 't': None}
 
