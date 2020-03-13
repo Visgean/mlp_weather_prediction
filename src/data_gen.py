@@ -158,13 +158,17 @@ class LSTMDataGenerator(keras.utils.Sequence):
     def on_epoch_end(self):
         'Updates indexes after each epoch'
 
-        del self.data
-        current_year = np.random.randint(1979, 2016 - self.years_per_epoch)
-        end_year = current_year + self.years_per_epoch
+        if self.years_per_epoch:
+            del self.data
+            current_year = np.random.randint(1979, 2016 - self.years_per_epoch)
+            end_year = current_year + self.years_per_epoch
 
-        print(f"Loading data from {current_year} to {end_year}")
+            print(f"Loading data from {current_year} to {end_year}")
 
-        self.data = self.data_full.sel(time=slice(str(current_year), str(end_year)))
+            self.data = self.data_full.sel(time=slice(str(current_year), str(end_year)))
+
+        else:
+            self.data = self.data_full
         self.data.load()
         self.data.compute()
 

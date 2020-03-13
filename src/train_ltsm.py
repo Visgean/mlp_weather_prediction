@@ -30,8 +30,8 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         std=stds,
         batch_size=batch_size,
         load=RAM_DOWNLOADED_FULLY,
-        seq_length=seq_length
-
+        seq_length=seq_length,
+        years_per_epoch=None
     )
 
     print("Loading validation data")
@@ -44,7 +44,8 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         std=stds,
         shuffle=False,
         load=True,
-        seq_length=seq_length
+        seq_length=seq_length,
+        years_per_epoch=None
     )
 
     print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')

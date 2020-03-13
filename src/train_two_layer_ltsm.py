@@ -2,7 +2,6 @@ import os
 import train
 import xarray as xr
 
-
 # import tensorflow as tf
 # assert tf.test.is_gpu_available()
 import train_ltsm
@@ -19,11 +18,17 @@ OUT_DIR = os.getenv('SAVE_DIR')
 # Load the geo500 and temp850 data and merge
 z = xr.open_mfdataset(
     f'{DATADIR}geopotential_500/*.nc',
-    combine='by_coords'
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+
 )
 t = xr.open_mfdataset(
     f'{DATADIR}temperature_850/*.nc',
-    combine='by_coords'
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+
 )
 ds = xr.merge([z, t], compat='override')
 
