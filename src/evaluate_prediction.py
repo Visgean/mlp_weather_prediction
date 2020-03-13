@@ -21,15 +21,15 @@ def evaluate(datadir, pred_save_fn, valid_years, name):
 
 if __name__ == '__main__':
     evaluate(
-        datadir='/home/s1660124/geopotential/',
-        pred_save_fn='/home/s1660124/output_geopotential/predictions',
+        datadir='/home/visgean/Downloads/weather/geopotential/',
+        pred_save_fn='/dropbox/Dropbox/2. mlp/output_geopotential/predictions',
         valid_years=('2017', '2018'),
         name='Geopotential'
     )
 
     evaluate(
-        datadir='/home/s1660124/temperature/',
-        pred_save_fn='/home/s1660124/output_temperature/predictions',
+        datadir='/home/visgean/Downloads/weather/temperature/',
+        pred_save_fn='/dropbox/Dropbox/2. mlp/output_temperature/predictions',
         valid_years=('2017', '2018'),
         name='Temperature'
     )
