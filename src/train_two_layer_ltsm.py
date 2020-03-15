@@ -13,21 +13,21 @@ stds = xr.load_dataarray('data/baseline_std.nc')
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
-OUT_DIR = os.getenv('SAVE_DIR')
+OUT_DIR = os.getenv('SAVE_DIR', '/home/visgean/Downloads/test')
 
 # Load the geo500 and temp850 data and merge
 z = xr.open_mfdataset(
     f'{DATADIR}geopotential_500/*.nc',
     combine='by_coords',
-    parallel=True,
-    chunks={'time': 10}
+    # parallel=True,
+    # chunks={'time': 10}
 
 )
 t = xr.open_mfdataset(
     f'{DATADIR}temperature_850/*.nc',
     combine='by_coords',
-    parallel=True,
-    chunks={'time': 10}
+    # parallel=True,
+    # chunks={'time': 10}
 
 )
 ds = xr.merge([z, t], compat='override')
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
         lead_time=72,
-        seq_length=12,
+        seq_length=8,
         gpu=0,
         iterative=False,
         RAM_DOWNLOADED_FULLY=False,

@@ -13,7 +13,7 @@ stds = xr.load_dataarray('data/baseline_std.nc')
 
 
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
-OUT_DIR = os.getenv('SAVE_DIR')
+OUT_DIR = os.getenv('SAVE_DIR', '/home/visgean/Downloads/test/')
 
 # Load the geo500 and temp850 data and merge
 z = xr.open_mfdataset(

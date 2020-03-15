@@ -4,7 +4,7 @@ import tensorflow as tf
 import tensorflow.keras as keras
 
 from build_network import build_cnn_ltsm
-from data_gen import LSTMDataGenerator
+from data_gen import LSTMDataGenerator, SelectiveLSTMDataGenerator
 from weatherbench.train_nn import create_iterative_predictions, create_predictions
 
 
@@ -22,16 +22,16 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     ds_test = ds.sel(time=slice(*test_years))
 
     print("Loading training data")
-    dg_train = LSTMDataGenerator(
+    dg_train = SelectiveLSTMDataGenerator(
         ds=ds_train,
         var_dict=levels_per_variable,
         lead_time=lead_time,
         mean=means,
         std=stds,
         batch_size=batch_size,
-        load=RAM_DOWNLOADED_FULLY,
         seq_length=seq_length,
-        years_per_epoch=None
+        years_per_epoch=5,
+        load=False
     )
 
     print("Loading validation data")
@@ -45,7 +45,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         shuffle=False,
         load=True,
         seq_length=seq_length,
-        years_per_epoch=None
+        # years_per_epoch=None
     )
 
     print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')
