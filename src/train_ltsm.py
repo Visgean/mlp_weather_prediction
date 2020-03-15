@@ -1,6 +1,15 @@
+#For Keras
+import tensorflow as tf
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
+config.log_device_placement = True 
+
+sess = tf.Session(config=config)
+
+# set_session(sess)  # set this TensorFlow session as the default session for Keras
+
 import os
 
-import tensorflow as tf
 import tensorflow.keras as keras
 
 from build_network import build_cnn_ltsm
@@ -8,13 +17,12 @@ from data_gen import LSTMDataGenerator, SelectiveLSTMDataGenerator
 from weatherbench.train_nn import create_iterative_predictions, create_predictions
 
 
+
 def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,
           levels_per_variable, seq_length, RAM_DOWNLOADED_FULLY=True):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
-    # Limit TF memory usage
-    # limit_mem()
 
     # TODO: Flexible valid split
     ds_train = ds.sel(time=slice(*train_years))
@@ -30,7 +38,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         std=stds,
         batch_size=batch_size,
         seq_length=seq_length,
-        years_per_epoch=5,
+        years_per_epoch=2,
         load=False
     )
 
@@ -63,7 +71,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
 
     # Train model
     # TODO: Learning rate schedule
-    model.fit_generator(dg_train, epochs=100, validation_data=dg_valid,
+    model.fit_generator(dg_train, epochs=300, validation_data=dg_valid,
                         callbacks=[
                             tf.keras.callbacks.EarlyStopping(
                                 monitor='val_loss',

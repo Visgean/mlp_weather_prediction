@@ -173,9 +173,11 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
         self.data.load()
         self.data.compute()
 
-        self.n_samples = self.data.isel(time=slice(0, -self.lead_time)).shape[0]
-        self.init_time = self.data.isel(time=slice(None, -self.lead_time)).time
-        self.valid_time = self.data.isel(time=slice(self.lead_time, None)).time
+        adjusted_lead_time = self.seq_length + self.lead_time
+
+        self.n_samples = self.data.isel(time=slice(0, -adjusted_lead_time)).shape[0]
+        self.init_time = self.data.isel(time=slice(None, -adjusted_lead_time)).time
+        self.valid_time = self.data.isel(time=slice(adjusted_lead_time, None)).time
 
         self.idxs = np.arange(self.n_samples)
         if self.shuffle == True:
@@ -218,9 +220,11 @@ class LSTMDataGenerator(keras.utils.Sequence):
         self.std = self.data.std('time').mean(('lat', 'lon')).compute() if std is None else std
         # Normalize
         self.data = (self.data - self.mean) / self.std
-        self.n_samples = self.data.isel(time=slice(0, -(lead_time + seq_length))).shape[0]
-        self.init_time = self.data.isel(time=slice(None, -(lead_time + seq_length))).time
-        self.valid_time = self.data.isel(time=slice((seq_length + lead_time), None)).time
+        adjusted_lead_time = self.seq_length + lead_time
+
+        self.n_samples = self.data.isel(time=slice(0, -adjusted_lead_time)).shape[0]
+        self.init_time = self.data.isel(time=slice(None, -adjusted_lead_time)).time
+        self.valid_time = self.data.isel(time=slice(adjusted_lead_time, None)).time
 
         self.on_epoch_end()
 
