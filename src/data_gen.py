@@ -147,10 +147,15 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
         'Generate one batch of data'
         idxs = self.idxs[i * self.batch_size:(i + 1) * self.batch_size]
 
-        Xs = np.stack(
-            [self.data.isel(time=slice(sample_id, sample_id + self.seq_length)).values for sample_id in idxs],
-            axis=0
-        )
+        try:
+            Xs = np.stack(
+                [self.data.isel(time=slice(sample_id, sample_id + self.seq_length)).values for sample_id in idxs],
+                axis=0
+            )
+        except:
+            print(f'X data empty, retrieving to previous batchw{i}')
+            r_i =  np.random.randint(0, i-1)
+            return self.__getitem__(r_i)
 
         Y = self.data.isel(time=idxs + self.seq_length + self.lead_time).values
         return Xs, Y
@@ -239,10 +244,15 @@ class LSTMDataGenerator(keras.utils.Sequence):
         'Generate one batch of data'
         idxs = self.idxs[i * self.batch_size:(i + 1) * self.batch_size]
 
-        Xs = np.stack(
-            [self.data.isel(time=slice(sample_id, sample_id + self.seq_length)).values for sample_id in idxs],
-            axis=0
-        )
+        try:
+            Xs = np.stack(
+                [self.data.isel(time=slice(sample_id, sample_id + self.seq_length)).values for sample_id in idxs],
+                axis=0
+            )
+        except:
+            print(f'X data empty, retrieving to previous batchw{i}')
+            r_i =  np.random.randint(0, i-1)
+            return self.__getitem__(r_i)
 
         Y = self.data.isel(time=idxs + self.seq_length + self.lead_time).values
         return Xs, Y
