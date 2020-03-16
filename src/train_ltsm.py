@@ -1,8 +1,9 @@
-#For Keras
+# For Keras
 import tensorflow as tf
+
 config = tf.ConfigProto()
 config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-config.log_device_placement = True 
+config.log_device_placement = True
 
 sess = tf.Session(config=config)
 
@@ -17,11 +18,10 @@ from data_gen import LSTMDataGenerator, SelectiveLSTMDataGenerator
 from weatherbench.train_nn import create_iterative_predictions, create_predictions
 
 
-
 def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,
-          levels_per_variable, seq_length, RAM_DOWNLOADED_FULLY=True):
+          levels_per_variable, seq_length, weights=None):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
     # TODO: Flexible valid split
@@ -38,7 +38,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         std=stds,
         batch_size=batch_size,
         seq_length=seq_length,
-        years_per_epoch=2,
+        years_per_epoch=3,
         load=False
     )
 
@@ -67,6 +67,10 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
 
     model = build_cnn_ltsm(filters, kernels, input_shape=(None, 32, 64, num_levels), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')
+    if weights:
+        print(f'loading {weights}')
+        model.load_weights(weights)
+
     print(model.summary())
 
     # Train model
