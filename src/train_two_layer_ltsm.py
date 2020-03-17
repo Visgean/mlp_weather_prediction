@@ -59,5 +59,5 @@ if __name__ == '__main__':
         seq_length=8,
         gpu=0,
         iterative=False,
-        weights='../models/ltsm/weights.24-0.46.hdf5'
+        weights='../models/ltsm/weights.57-0.37.hdf5'
     )
