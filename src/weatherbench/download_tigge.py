@@ -5,11 +5,15 @@ from fire import Fire
 
 
 def main(var, years=[2017, 2018], month_start=1, month_end=12, step_end=120,
+         all_steps=True,
          path='/Users/fasand/Downloads/WeatherbenchDataset/tigge/raw/'):
     os.makedirs(path, exist_ok=True)
     server = ECMWFDataServer()
     months = range(month_start, month_end+1)
-    steps = "/".join([str(i) for i in range(0, step_end+1, 6)])
+    if all_steps:
+        steps = "/".join([str(i) for i in range(0, step_end+1, 6)])
+    else:
+        steps = str(step_end)
     for year in years:
         for month in months:
             days = calendar.monthrange(year, month)[1]
