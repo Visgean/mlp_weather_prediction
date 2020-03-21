@@ -94,7 +94,7 @@ class SelectiveDataGenerator(keras.utils.Sequence):
 
 
 class SelectiveLSTMDataGenerator(keras.utils.Sequence):
-    def __init__(self, ds, var_dict, seq_length, lead_time, years_per_epoch=5, batch_size=32, shuffle=False, load=True,
+    def __init__(self, ds, var_dict, seq_length, lead_time, step_size, years_per_epoch=5, batch_size=32, shuffle=False, load=True,
                  mean=None, std=None):
         """
         Data generator for WeatherBench data.
@@ -116,6 +116,7 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
         self.lead_time = lead_time
         self.seq_length = seq_length
         self.years_per_epoch = years_per_epoch
+        self.step_size = step_size
 
         data = []
         generic_level = xr.DataArray([1], coords={'level': [1]}, dims=['level'])
@@ -149,7 +150,7 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
 
         try:
             Xs = np.stack(
-                [self.data.isel(time=slice(sample_id, sample_id + self.seq_length)).values for sample_id in idxs],
+                [self.data.isel(time=slice(sample_id, sample_id + self.seq_length, self.step_size)).values for sample_id in idxs],
                 axis=0
             )
         except:
@@ -157,7 +158,7 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
             r_i =  np.random.randint(0, i-1)
             return self.__getitem__(r_i)
 
-        Y = self.data.isel(time=idxs + self.seq_length + self.lead_time).values
+        Y = self.data.isel(time=idxs + self.seq_length + self.lead_time + ((self.step_size-1)*(self.seq_length-1))).values
         return Xs, Y
 
     def on_epoch_end(self):
@@ -178,7 +179,7 @@ class SelectiveLSTMDataGenerator(keras.utils.Sequence):
         self.data.load()
         self.data.compute()
 
-        adjusted_lead_time = self.seq_length + self.lead_time
+        adjusted_lead_time = self.lead_time+self.seq_length+((self.step_size-1)*(self.seq_length-1))
 
         self.n_samples = self.data.isel(time=slice(0, -adjusted_lead_time)).shape[0]
         self.init_time = self.data.isel(time=slice(None, -adjusted_lead_time)).time
