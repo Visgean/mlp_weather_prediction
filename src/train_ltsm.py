@@ -14,14 +14,14 @@ import os
 import tensorflow.keras as keras
 
 from build_network import build_cnn_ltsm
-from data_gen import LSTMDataGenerator, SelectiveLSTMDataGenerator
+from data_gen import SelectiveLSTMDataGenerator
 from weatherbench.train_nn import create_iterative_predictions, create_predictions
 
 
 def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,
-          levels_per_variable, seq_length, weights=None):
+          levels_per_variable, seq_length, weights=None, step_size=1):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
     # TODO: Flexible valid split
@@ -39,11 +39,12 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         batch_size=batch_size,
         seq_length=seq_length,
         years_per_epoch=3,
-        load=False
+        load=False,
+        step_size=step_size
     )
 
     print("Loading validation data")
-    dg_valid = LSTMDataGenerator(
+    dg_valid = SelectiveLSTMDataGenerator(
         ds=ds_valid,
         var_dict=levels_per_variable,
         lead_time=lead_time,
@@ -53,7 +54,8 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         shuffle=False,
         load=True,
         seq_length=seq_length,
-        # years_per_epoch=None
+        years_per_epoch=None,
+        step_size=step_size
     )
 
     print(f'Mean = {dg_train.mean}; Std = {dg_train.std}')
@@ -95,7 +97,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     # Create predictions
 
     print("Loading test data")
-    dg_test = LSTMDataGenerator(
+    dg_test = SelectiveLSTMDataGenerator(
         ds=ds_test,
         var_dict=levels_per_variable,
         lead_time=lead_time,
@@ -105,6 +107,8 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         shuffle=False,
         load=True,
         seq_length=seq_length,
+        years_per_epoch=None,
+        step_size=step_size
     )
 
     pred = create_iterative_predictions(model, dg_test) if iterative else create_predictions(model, dg_test)
