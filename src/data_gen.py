@@ -51,7 +51,7 @@ class SelectiveDataGenerator(keras.utils.Sequence):
         self.std = data.std('time').mean(('lat', 'lon')).compute() if std is None else std
 
         # Normalize
-        self.data_full = (data - self.mean) / self.std
+        self.data_full = data
 
         self.data = None
 

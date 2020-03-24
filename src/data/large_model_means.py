@@ -22,28 +22,28 @@ OUT_DIR = os.getenv('SAVE_DIR')
 tp = xr.open_mfdataset(
     f'{DATADIR}total_precipitation/*.nc',
     combine='by_coords',
-    # parallel=True,
-    # chunks={'time': 10}
+    parallel=True,
+    chunks={'time': 5}
 
 )
 
 wu = xr.open_mfdataset(
     f'{DATADIR}10m_u_component_of_wind/*.nc',
     combine='by_coords',
-    # parallel=True,
-    # chunks={'time': 10}
+    parallel=True,
+    chunks={'time': 5}
 
 )
 wv = xr.open_mfdataset(
     f'{DATADIR}10m_v_component_of_wind/*.nc',
     combine='by_coords',
-    # parallel=True,
-    # chunks={'time': 10}
+    parallel=True,
+    chunks={'time': 5}
 
 )
 
 ds = xr.merge([tp, wu, wv], compat='override')
-ds.load()
+# ds.load()
 
 var_dict = {
     # 'z': [300, 400, 500, 600, 700],
