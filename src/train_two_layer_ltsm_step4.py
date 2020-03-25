@@ -60,5 +60,4 @@ if __name__ == '__main__':
         step_size=4,
         gpu=0,
         iterative=False,
-        weights='../models/ltsm/weights.57-0.37.hdf5'
     )
