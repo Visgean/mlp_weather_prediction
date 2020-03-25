@@ -6,6 +6,8 @@ import train_ltsm
 DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
 OUT_DIR = os.getenv('SAVE_DIR')
 
+print(DATADIR)
+
 datasets = {
     'z': 'geopotential',
     't': 'temperature',
@@ -29,6 +31,7 @@ means_all = []
 stds_all = []
 
 for var, name in datasets.items():
+    print('loading', name)
     levels = var_dict[var]
     means = xr.load_dataarray(f'data/{name}_mean.nc')
     stds = xr.load_dataarray(f'data/{name}_std.nc')

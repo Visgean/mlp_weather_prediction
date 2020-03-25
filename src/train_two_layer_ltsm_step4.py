@@ -16,6 +16,7 @@ stds = xr.load_dataarray('data/baseline_std.nc')
 #OUT_DIR = os.getenv('SAVE_DIR', '/home/visgean/Downloads/test')
 DATADIR = os.getenv('DATASET_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/datasets/')
 OUT_DIR = os.getenv('SAVE_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/output_baseline_ltsm/')
+print(DATADIR)
 
 
 # Load the geo500 and temp850 data and merge
