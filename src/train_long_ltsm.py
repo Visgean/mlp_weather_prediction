@@ -18,6 +18,8 @@ DATADIR = os.getenv('DATASET_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/datasets
 OUT_DIR = os.getenv('SAVE_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/output_baseline_ltsm/')
 
 
+print(DATADIR)
+
 # Load the geo500 and temp850 data and merge
 z = xr.open_mfdataset(
     f'{DATADIR}geopotential_500/*.nc',
@@ -55,8 +57,9 @@ if __name__ == '__main__':
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
-        lead_time=72,
+        lead_time=5*24,
         seq_length=8,
+        step_size=4,
         gpu=0,
         iterative=False,
     )
