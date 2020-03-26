@@ -46,7 +46,7 @@ cp -n /home/${STUDENT_ID}/10m_v_component_of_wind/*.nc ${DATASET_DIR}/10m_v_comp
 cp -n /home/${STUDENT_ID}/total_precipitation/*.nc ${DATASET_DIR}/total_precipitation/
 
 
-export SAVE_DIR=/home/${STUDENT_ID}/output_ltsm_big/
+export SAVE_DIR=/home/${STUDENT_ID}/output_ltsm_large/
 mkdir -p ${SAVE_DIR}
 mkdir -p ${SAVE_DIR}/models
 
@@ -57,4 +57,4 @@ mkdir -p ${SAVE_DIR}/models
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
-python train_two_layer_ltsm.py
+python train_large.py
