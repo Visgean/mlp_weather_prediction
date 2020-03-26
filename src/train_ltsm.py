@@ -63,9 +63,15 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     # Build model
     # TODO: Flexible input shapes and optimizer
     # Get the number of levels from the first variable (should be only one)
-    first_var = list(levels_per_variable.values())[0]
-    # Compatibility solution for baseline where {'z': None, 't': None}
-    num_levels = len(first_var) if first_var is not None else len(list(levels_per_variable.keys()))
+
+    if levels_per_variable is not None:
+
+        first_var = list(levels_per_variable.values())[0]
+        # Compatibility solution for baseline where {'z': None, 't': None}
+        num_levels = len(first_var) if first_var is not None else len(list(levels_per_variable.keys()))
+    else:
+        num_levels =len(ds.level)
+
 
     model = build_cnn_ltsm(filters, kernels, input_shape=(None, 32, 64, num_levels), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')

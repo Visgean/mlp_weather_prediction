@@ -30,7 +30,7 @@ class SelectiveDataGenerator(keras.utils.Sequence):
             std: If None, compute standard deviation from data.
         """
 
-        self.ds = ds
+        # self.ds = ds
         self.var_dict = var_dict
         self.batch_size = batch_size
         self.shuffle = shuffle
@@ -39,13 +39,15 @@ class SelectiveDataGenerator(keras.utils.Sequence):
 
         data = []
         generic_level = xr.DataArray([1], coords={'level': [1]}, dims=['level'])
-        for var, levels in var_dict.items():
-            try:
-                data.append(ds[var].sel(level=levels))
-            except ValueError:
-                data.append(ds[var].expand_dims({'level': generic_level}, 1))
-
-        data = xr.concat(data, 'level').transpose('time', 'lat', 'lon', 'level')
+        if var_dict:
+            for var, levels in var_dict.items():
+                try:
+                    data.append(ds[var].sel(level=levels))
+                except ValueError:
+                    data.append(ds[var].expand_dims({'level': generic_level}, 1))
+            data = xr.concat(data, 'level').transpose('time', 'lat', 'lon', 'level')
+        else:
+            data = ds
 
         self.mean = data.mean(('time', 'lat', 'lon')).compute() if mean is None else mean
         self.std = data.std('time').mean(('lat', 'lon')).compute() if std is None else std
