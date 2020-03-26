@@ -33,6 +33,7 @@ mean = data.mean(('time', 'lat', 'lon')).compute()
 std = data.std('time').mean(('lat', 'lon')).compute()
 
 mean.to_netcdf('baseline_mean.nc')
+std.to_netcdf('baseline_std.nc')
+
 import ipdb
 ipdb.set_trace()
-std.to_netcdf('baseline_std.nc')
