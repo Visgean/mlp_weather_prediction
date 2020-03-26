@@ -20,6 +20,24 @@ from data_gen import SelectiveLSTMDataGenerator
 from weatherbench.train_nn import create_iterative_predictions, create_predictions
 import xarray as xr
 
+DATADIR = os.getenv('DATASET_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/datasets/')
+OUT_DIR = os.getenv('SAVE_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/output_baseline_ltsm/')
+
+# Load the geo500 and temp850 data and merge
+z = xr.open_mfdataset(
+    f'{DATADIR}geopotential_500/*.nc',
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+
+)
+t = xr.open_mfdataset(
+    f'{DATADIR}temperature_850/*.nc',
+    combine='by_coords',
+    parallel=True,
+    chunks={'time': 10}
+
+)
 
 def evaluate(ds, filters, kernels, lr, activation, dr, batch_size,
              patience, model_save_fn, pred_save_fn, train_years, valid_years,
@@ -62,11 +80,20 @@ def evaluate(ds, filters, kernels, lr, activation, dr, batch_size,
         step_size=step_size
     )
 
+
+
+
     print(weights)
     pred = create_predictions(model, dg_test)
     print(f'Saving predictions: {pred_save_fn}')
     pred.to_netcdf(pred_save_fn)
     print(weights)
+
+    t_rmse = compute_weighted_rmse(pred.t, t.to_array()).load().to_dict()['data']
+    print(f'Temperature at 850m, rmse: {t_rmse}')
+
+    z_rmse = compute_weighted_rmse(pred.z, z.to_array()).load().to_dict()['data']
+    print(f'Geopotential at 500, rmse: {z_rmse}')
 
     ds_valid_array = ds_valid.to_array()
     print(compute_weighted_rmse(pred, ds_valid_array).load())
@@ -80,26 +107,10 @@ if __name__ == '__main__':
 
     # DATADIR = os.getenv('DATASET_DIR', '/home/visgean/Downloads/weather/')
     # OUT_DIR = os.getenv('SAVE_DIR', '/home/visgean/Downloads/test')
-    DATADIR = os.getenv('DATASET_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/datasets/')
-    OUT_DIR = os.getenv('SAVE_DIR', '/afs/inf.ed.ac.uk/user/s16/s1660124/output_baseline_ltsm/')
 
     print(DATADIR)
 
-    # Load the geo500 and temp850 data and merge
-    z = xr.open_mfdataset(
-        f'{DATADIR}geopotential_500/*.nc',
-        combine='by_coords',
-        parallel=True,
-        chunks={'time': 10}
 
-    )
-    t = xr.open_mfdataset(
-        f'{DATADIR}temperature_850/*.nc',
-        combine='by_coords',
-        parallel=True,
-        chunks={'time': 10}
-
-    )
     ds = xr.merge([z, t], compat='override')
 
     levels_per_variable = {'z': None, 't': None}
