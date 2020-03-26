@@ -16,3 +16,4 @@ std = precipitation.std('time').mean(('lat', 'lon')).compute()
 
 mean.to_netcdf('10m_u_component_of_wind_mean.nc')
 std.to_netcdf('10m_u_component_of_wind_std.nc')
+
