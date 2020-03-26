@@ -30,7 +30,7 @@ class SelectiveDataGenerator(keras.utils.Sequence):
             std: If None, compute standard deviation from data.
         """
 
-        # self.ds = ds
+        self.ds = ds
         self.var_dict = var_dict
         self.batch_size = batch_size
         self.shuffle = shuffle
