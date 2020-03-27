@@ -21,7 +21,7 @@ from weatherbench.train_nn import create_iterative_predictions, create_predictio
 def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,
-          levels_per_variable, seq_length, weights=None, step_size=1):
+          levels_per_variable, seq_length, model_builder=build_cnn_ltsm,  weights=None, step_size=1):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
 
     # TODO: Flexible valid split
@@ -73,7 +73,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
         num_levels =len(ds.level)
 
 
-    model = build_cnn_ltsm(filters, kernels, input_shape=(None, 32, 64, num_levels), activation=activation, dr=dr)
+    model = model_builder(filters, kernels, input_shape=(None, 32, 64, num_levels), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')
     if weights:
         print(f'loading {weights}')
