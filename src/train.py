@@ -11,7 +11,7 @@ from weatherbench.train_nn import DataGenerator, create_iterative_predictions, b
 def train(ds, filters, kernels, lr, activation, dr, batch_size,
           patience, model_save_fn, pred_save_fn, train_years, valid_years,
           test_years, lead_time, gpu, iterative, means, stds,
-          levels_per_variable, RAM_DOWNLOADED_FULLY=True):
+          levels_per_variable, RAM_DOWNLOADED_FULLY=True, model_builder=build_cnn):
     os.environ["CUDA_VISIBLE_DEVICES"] = str(gpu)
     # Limit TF memory usage
     # limit_mem()
@@ -52,7 +52,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     first_var = list(levels_per_variable.values())[0]
     # Compatibility solution for baseline where {'z': None, 't': None}
     num_levels = len(first_var) if first_var is not None else len(list(levels_per_variable.keys()))
-    model = build_cnn(filters, kernels, input_shape=(32, 64, num_levels), activation=activation, dr=dr)
+    model = model_builder(filters, kernels, input_shape=(32, 64, num_levels), activation=activation, dr=dr)
     model.compile(keras.optimizers.Adam(lr), 'mse')
     print(model.summary())
 
