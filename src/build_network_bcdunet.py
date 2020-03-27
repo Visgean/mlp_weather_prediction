@@ -3,7 +3,7 @@ import numpy as np
 import xarray as xr
 import tensorflow as tf
 import tensorflow.keras as keras
-from tensorflow.keras.layers import Input, Dropout, ConvLSTM2D, Conv2D, Lambda
+from tensorflow.keras.layers import *
 import tensorflow.keras.backend as K
 
 from weatherbench.train_nn import PeriodicConv2D
