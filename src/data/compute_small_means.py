@@ -17,7 +17,7 @@ t = xr.open_mfdataset(
 ds = xr.merge([z, t], compat='override')
 
 
-var_dict = {'z': [500], 't': 850}
+var_dict = {'z': [500], 't': [850]}
 
 data = []
 generic_level = xr.DataArray([1], coords={'level': [1]}, dims=['level'])
@@ -34,3 +34,6 @@ std = data.std('time').mean(('lat', 'lon')).compute()
 
 mean.to_netcdf('baseline_mean.nc')
 std.to_netcdf('baseline_std.nc')
+
+import ipdb
+ipdb.set_trace()
