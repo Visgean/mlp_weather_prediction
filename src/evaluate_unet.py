@@ -54,7 +54,7 @@ ds_valid = ds.sel(time=slice(*valid_years))
 
 def eval_file(path):
 
-    pred = xr.open_mfdataset(f'{DATADIR}unet_pred.nc')
+    pred = xr.open_mfdataset(path)
 
     t_rmse = compute_weighted_rmse(pred.t, t.to_array()).load().to_dict()['data']
     print(f'{path}: Temperature at 850m, rmse: {t_rmse}')
