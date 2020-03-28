@@ -51,12 +51,21 @@ levels_per_variable = {'z': None, 't': None}
 ds_valid = ds.sel(time=slice(*valid_years))
 
 
-pred = xr.open_mfdataset(f'{DATADIR}unet_pred.nc')
 
-t_rmse = compute_weighted_rmse(pred.t, t.to_array()).load().to_dict()['data']
-print(f'Temperature at 850m, rmse: {t_rmse}')
+def eval_file(path):
 
-z_rmse = compute_weighted_rmse(pred.z, z.to_array()).load().to_dict()['data']
-print(f'Geopotential at 500, rmse: {z_rmse}')
+    pred = xr.open_mfdataset(path)
 
+    t_rmse = compute_weighted_rmse(pred.t, t.to_array()).load().to_dict()['data']
+    print(f'{path}: Temperature at 850m, rmse: {t_rmse}')
+
+    z_rmse = compute_weighted_rmse(pred.z, z.to_array()).load().to_dict()['data']
+    print(f'{path}: Geopotential at 500, rmse: {z_rmse}')
+
+
+
+
+eval_file('/home/s1660124/output_unet/predictions')
+eval_file('/home/s1660124/output_ltsm_6hours_large_model/predictions')
+eval_file('/home/s1660124/output_ltsm_3days_large_model/predictions')
 
