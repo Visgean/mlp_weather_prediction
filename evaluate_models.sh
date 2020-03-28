@@ -1,7 +1,7 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Teach-ShortJobs
+#SBATCH --partition=Teach-Standard
 #SBATCH --gres=gpu:2
 #SBATCH --mem=12000  # memory in Mb
 #SBATCH --time=0-2:00:00
@@ -51,4 +51,4 @@ mkdir -p ${SAVE_DIR}/models
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
-python evaluate_generic_ltsm.py.py
+python evaluate_generic_ltsm.py

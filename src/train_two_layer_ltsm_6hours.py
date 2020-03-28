@@ -55,7 +55,7 @@ if __name__ == '__main__':
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
-        lead_time=5*24,
+        lead_time=6,
         seq_length=8,
         gpu=0,
         iterative=False,
