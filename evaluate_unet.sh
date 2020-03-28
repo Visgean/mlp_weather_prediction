@@ -38,7 +38,7 @@ mkdir -p ${DATASET_DIR}/geopotential_500/
 
 cp -n /home/${STUDENT_ID}/temperature_850/*.nc ${DATASET_DIR}/temperature_850/
 cp -n /home/${STUDENT_ID}/geopotential_500/*.nc ${DATASET_DIR}/geopotential_500/
-cp -n /home/s1660124/output_unet/predictions ${DATASET_DIR}/unet_pred.nc
+#cp -n /home/s1660124/output_unet/predictions ${DATASET_DIR}/unet_pred.nc
 
 
 export SAVE_DIR=/home/${STUDENT_ID}/output_unet/
