@@ -116,30 +116,6 @@ if __name__ == '__main__':
 
     levels_per_variable = {'z': None, 't': None}
 
-    # evaluate(
-    #     ds=ds,
-    #     means=means,
-    #     stds=stds,
-    #     levels_per_variable=levels_per_variable,
-    #     filters=[64, 64, 64, 64, 2],
-    #     kernels=[5, 5, 5, 5, 5],
-    #     lr=1e-4,
-    #     activation='elu',
-    #     dr=0,
-    #     batch_size=64,
-    #     patience=50,
-    #     model_save_fn=OUT_DIR,
-    #     pred_save_fn=os.path.join(OUT_DIR, 'predictions-5days'),
-    #     train_years=('1979', '2014'),
-    #     valid_years=('2015', '2016'),
-    #     test_years=('2017', '2018'),
-    #     lead_time=5 * 24,
-    #     seq_length=8,
-    #     step_size=4,
-    #     gpu=0,
-    #     iterative=False,
-    #     weights='/home/s1660124/output_ltsm_5days/models/weights.11-0.56.hdf5'
-    # )
 
 
     evaluate(
@@ -147,25 +123,23 @@ if __name__ == '__main__':
         means=means,
         stds=stds,
         levels_per_variable=levels_per_variable,
-        filters=[64, 64, 64, 64, 2],
-        kernels=[5, 5, 5, 5, 5],
+        filters=[64, 64, 64, 64, 64, 64, 2],
+        kernels=[5, 5, 5, 5, 5, 5, 5],
         lr=1e-4,
         activation='elu',
         dr=0,
         batch_size=64,
         patience=50,
         model_save_fn=OUT_DIR,
-        pred_save_fn=os.path.join(OUT_DIR, 'predictions-5days'),
+        pred_save_fn=os.path.join(OUT_DIR, 'predictions'),
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
         lead_time=5 * 24,
         seq_length=8,
-        step_size=4,
         gpu=0,
         iterative=False,
-        model_builder=build_cnn_ltsm_bcdunet,
-        weights='/home/s1660124/output_unet/models/weights.14-6.65.hdf5'
+        weights='/home/s1660124/output_ltsm_5days_large_model/models/weights.21-0.57.hdf5'
     )
 
 
