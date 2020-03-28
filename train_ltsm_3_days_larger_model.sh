@@ -40,7 +40,7 @@ cp -n /home/${STUDENT_ID}/temperature_850/*.nc ${DATASET_DIR}/temperature_850/
 cp -n /home/${STUDENT_ID}/geopotential_500/*.nc ${DATASET_DIR}/geopotential_500/
 
 
-export SAVE_DIR=/home/${STUDENT_ID}/output_ltsm_5days_large_model/
+export SAVE_DIR=/home/${STUDENT_ID}/output_ltsm_3days_large_model/
 mkdir -p ${SAVE_DIR}
 mkdir -p ${SAVE_DIR}/models
 

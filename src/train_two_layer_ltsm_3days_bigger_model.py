@@ -39,7 +39,7 @@ if __name__ == '__main__':
         activation='elu',
         dr=0,
         batch_size=64,
-        patience=50,
+        patience=10,
         model_save_fn=OUT_DIR,
         pred_save_fn=os.path.join(OUT_DIR, 'predictions'),
         train_years=('1979', '2014'),
