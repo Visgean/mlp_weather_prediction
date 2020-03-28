@@ -124,7 +124,7 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     pred.to_netcdf(pred_save_fn)
 
 
-    for level in pred.level:
+    for level in ds.level:
         level_pred = pred.sel(level=level).to_array()
         ds_valid_array = ds_valid.sel(level=level).to_array()
         level_int = level.to_dict()['data']
