@@ -49,4 +49,5 @@ if __name__ == '__main__':
         seq_length=8,
         gpu=0,
         iterative=False,
+        weights='/home/s1660124/output_ltsm_3days_large_model/models/weights.37-0.32.hdf5'
     )

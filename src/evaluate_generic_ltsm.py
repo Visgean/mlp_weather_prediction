@@ -135,11 +135,11 @@ if __name__ == '__main__':
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
-        lead_time=5 * 24,
+        lead_time=3 * 24,
         seq_length=8,
         gpu=0,
         iterative=False,
-        weights='/home/s1660124/output_ltsm_5days_large_model/models/weights.21-0.57.hdf5'
+        weights='/home/s1660124/output_ltsm_3days_large_model/models/weights.37-0.32.hdf5'
     )
 
 
