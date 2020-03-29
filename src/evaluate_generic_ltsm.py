@@ -123,8 +123,8 @@ if __name__ == '__main__':
         means=means,
         stds=stds,
         levels_per_variable=levels_per_variable,
-        filters=[64, 64, 64, 64, 64, 64, 2],
-        kernels=[5, 5, 5, 5, 5, 5, 5],
+        filters=[64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 2],
+        kernels=[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
         lr=1e-4,
         activation='elu',
         dr=0,
@@ -139,7 +139,7 @@ if __name__ == '__main__':
         seq_length=8,
         gpu=0,
         iterative=False,
-        weights='/home/s1660124/output_ltsm_3days_large_model/models/weights.37-0.32.hdf5'
+        weights='/home/s1660124/super_large/models/weights.71-0.30.hdf5'
     )
 
 
