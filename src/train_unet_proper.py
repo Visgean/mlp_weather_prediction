@@ -52,7 +52,7 @@ if __name__ == '__main__':
         activation='elu',
         dr=0,
         batch_size=64,
-        patience=10,
+        patience=5,
         model_save_fn=OUT_DIR,
         pred_save_fn=os.path.join(OUT_DIR, 'predictions'),
         train_years=('1979', '2014'),
@@ -61,7 +61,8 @@ if __name__ == '__main__':
         lead_time=72,
         gpu=0,
         iterative=False,
-        model_builder=get_unet_proper
+        model_builder=get_unet_proper,
+        weights='/home/s1660124/output_unet_proper/models/weights.18-0.47.hdf5'
     )
 
     t_rmse = compute_weighted_rmse(pred.t, t.to_array()).load().to_dict()['data']
