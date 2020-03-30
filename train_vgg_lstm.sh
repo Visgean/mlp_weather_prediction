@@ -1,11 +1,11 @@
 #!/bin/sh
 #SBATCH -N 1	  # nodes requested
 #SBATCH -n 1	  # tasks requested
-#SBATCH --partition=Teach-LongJobs
-#SBATCH --gres=gpu:4
-#SBATCH --mem=24000  # memory in Mb
-#SBATCH --time=0-24:00:00
-#SBATCH -c 4
+#SBATCH --partition=Teach-Standard
+#SBATCH --gres=gpu:6
+#SBATCH --mem=32000  # memory in Mb
+#SBATCH --time=0-08:00:00
+#SBATCH -c 6
 
 export CUDA_HOME=/opt/cuda-9.0.176.1/
 
@@ -40,7 +40,7 @@ cp -n /home/${STUDENT_ID}/temperature_850/*.nc ${DATASET_DIR}/temperature_850/
 cp -n /home/${STUDENT_ID}/geopotential_500/*.nc ${DATASET_DIR}/geopotential_500/
 
 
-export SAVE_DIR=/home/${STUDENT_ID}/output_vgg_lstm/
+export SAVE_DIR=/home/${STUDENT_ID}/output_vgg_lstm_short/
 mkdir -p ${SAVE_DIR}
 mkdir -p ${SAVE_DIR}/models
 
