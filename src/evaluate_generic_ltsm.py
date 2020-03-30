@@ -123,8 +123,8 @@ if __name__ == '__main__':
         means=means,
         stds=stds,
         levels_per_variable=levels_per_variable,
-        filters=[64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 64, 2],
-        kernels=[5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+        filters=[64, 64, 64, 64, 2],
+        kernels=[5, 5, 5, 5, 5],
         lr=1e-4,
         activation='elu',
         dr=0,
@@ -135,11 +135,11 @@ if __name__ == '__main__':
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
-        lead_time=3 * 24,
+        lead_time=6,
         seq_length=8,
         gpu=0,
         iterative=False,
-        weights='/home/s1660124/super_large/models/weights.71-0.30.hdf5'
+        weights='/home/s1660124//output_ltsm_6hours_ltsm_model/models/weights.32-0.03.hdf5'
     )
 
 
