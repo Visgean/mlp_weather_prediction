@@ -40,7 +40,7 @@ cp -n /home/${STUDENT_ID}/temperature_850/*.nc ${DATASET_DIR}/temperature_850/
 cp -n /home/${STUDENT_ID}/geopotential_500/*.nc ${DATASET_DIR}/geopotential_500/
 
 
-export SAVE_DIR=/home/${STUDENT_ID}/output_unet_proper/
+export SAVE_DIR=/home/${STUDENT_ID}/output_vgg/
 mkdir -p ${SAVE_DIR}
 mkdir -p ${SAVE_DIR}/models
 
@@ -51,4 +51,4 @@ mkdir -p ${SAVE_DIR}/models
 source /home/${STUDENT_ID}/miniconda3/bin/activate mlp
 cd /home/${STUDENT_ID}/mlp_weather_prediction/src
 
-python train_unet_proper.py
+python train_vgg.py

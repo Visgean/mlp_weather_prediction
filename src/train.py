@@ -92,11 +92,4 @@ def train(ds, filters, kernels, lr, activation, dr, batch_size,
     pred = create_iterative_predictions(model, dg_test) if iterative else create_predictions(model, dg_test)
     print(f'Saving predictions: {pred_save_fn}')
     pred.to_netcdf(pred_save_fn)
-
-
-    for level in pred.level:
-        level_pred = pred.sel(level=level).to_array()
-        ds_valid_array = ds_valid.sel(level=level).to_array()
-        level_int = level.to_dict()['data']
-        rmse = compute_weighted_rmse(level_pred, ds_valid_array).load().to_dict()['data']
-        print(f'level {level_int}, rmse: {rmse}')
+    return pred
