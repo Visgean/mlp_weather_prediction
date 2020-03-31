@@ -207,3 +207,10 @@ def get_unet_proper_lstm(filters, kernels, input_shape, activation='elu', dr=0):
     model = models.Model(inputs=inputs, outputs=conv10)
 
     return model
+
+
+
+# tf.keras.utils.plot_model(
+#     get_unet_proper_lstm(1, 1,1, 1,1), to_file='model.svg', show_shapes=False, show_layer_names=False,
+#     rankdir='TB',
+# )

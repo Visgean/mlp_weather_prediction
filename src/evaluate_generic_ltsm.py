@@ -2,6 +2,7 @@
 import tensorflow as tf
 
 from build_network_bcdunet import build_cnn_ltsm_bcdunet
+from build_network_unet import get_unet_proper_lstm
 from weatherbench.score import compute_weighted_rmse
 
 config = tf.ConfigProto()
@@ -39,6 +40,7 @@ t = xr.open_mfdataset(
     chunks={'time': 10}
 
 )
+
 
 def evaluate(ds, filters, kernels, lr, activation, dr, batch_size,
              patience, model_save_fn, pred_save_fn, train_years, valid_years,
@@ -81,9 +83,6 @@ def evaluate(ds, filters, kernels, lr, activation, dr, batch_size,
         step_size=step_size
     )
 
-
-
-
     print(weights)
     pred = create_predictions(model, dg_test)
     print(f'Saving predictions: {pred_save_fn}')
@@ -111,12 +110,9 @@ if __name__ == '__main__':
 
     print(DATADIR)
 
-
     ds = xr.merge([z, t], compat='override')
 
     levels_per_variable = {'z': None, 't': None}
-
-
 
     evaluate(
         ds=ds,
@@ -135,13 +131,13 @@ if __name__ == '__main__':
         train_years=('1979', '2014'),
         valid_years=('2015', '2016'),
         test_years=('2017', '2018'),
-        lead_time=6,
+        lead_time=72,
         seq_length=8,
         gpu=0,
         iterative=False,
-        weights='/home/s1660124//output_ltsm_6hours_ltsm_model/models/weights.32-0.03.hdf5'
+        model_builder=get_unet_proper_lstm,
+        weights='/home/s1660124/output_unet_lstm/models/weights.56-0.46.hdf5'
     )
-
 
     # evaluate(
     #     ds=ds,
