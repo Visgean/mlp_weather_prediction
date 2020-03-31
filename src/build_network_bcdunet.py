@@ -11,15 +11,15 @@ from weatherbench.train_nn import PeriodicConv2D
 
 def build_cnn_ltsm_bcdunet(filters, kernels, input_shape, activation='elu', dr=0):
     """Fully convolutional network"""
-    x = input = Input(shape=input_shape)
-    x = ConvLSTM2D(filters = 64, kernel_size = 5, dilation_rate = 2, padding= 'same',activation= 'tanh',
-                   data_format = 'channels_last')(x)
-    for f, k in zip(filters[:-1], kernels[:-1]):
-        x = PeriodicConv2D(f, k, activation=activation)(x)
-        if dr > 0: x = Dropout(dr)(x)
-    x = PeriodicConv2D(filters[-1], kernels[-1])(x)
+    x = input = Input(shape=(32, 64, 2))
+    # x = ConvLSTM2D(filters = 64, kernel_size = 5, dilation_rate = 2, padding= 'same',activation= 'tanh',
+    #                data_format = 'channels_last')(x)
+    # for f, k in zip(filters[:-1], kernels[:-1]):
+    #     x = PeriodicConv2D(f, k, activation=activation)(x)
+    #     if dr > 0: x = Dropout(dr)(x)
+    # x = PeriodicConv2D(filters[-1], kernels[-1])(x)
 
-    N = input_shape[1]
+    N = input_shape[0]
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(x)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)
 
